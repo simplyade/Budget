@@ -9,38 +9,45 @@ categories like food, clothing, and entertainment. These objects should allow fo
 Push your code to GitHub, and submit the repo link.
 
 	
-'''
-
-class Budget:  #can be any amount or integer input
-     def __init__(self,category,amount):
-          self.category=category
-          self.amount = amount
-          
-          
-     def deposit (self,pay):
-          self.pay=pay
-          self.amount=int((self.amount) + (self.pay))
-          return 'You deposited {}'.format(self.amount)
 
 
-     def transfer (self,transfer_amt):
-          self.transfer_amt=transfer_amt
-          if self.amount>= transfer_amt:
-               return 'You transfered {}'.format(self.transfer_amt)
-          else:
-               return "Invalid Transfer"
+class Budget:
+    def __init__(self, category, amount):
+        self.category = category
+        self.amount = amount
 
-     def balance(self,transfer_amt):
-          self.transfer_amt=transfer_amt
-          if self.amount>= transfer_amt:
-               self.amount-=transfer_amt
-               return "Your balance is {}:".format(int(self.amount)-(self.transfer_amt))
-     
-               
-food = Budget("Food",40000)
+    def deposit(self, amount):
+        if amount < 0:
+            raise ValueError("Deposit amount cannot be negative")
+        self.amount += amount
+        return f"Deposited {amount} into {self.category}"
+
+    def withdraw(self, amount):
+        if amount < 0:
+            raise ValueError("Withdrawal amount cannot be negative")
+        if amount > self.amount:
+            raise ValueError("Insufficient balance")
+        self.amount -= amount
+        return f"Withdrew {amount} from {self.category}"
+
+    def transfer_to(self, other_budget, amount):
+        if amount < 0:
+            raise ValueError("Transfer amount cannot be negative")
+        if amount > self.amount:
+            raise ValueError("Insufficient balance")
+        self.amount -= amount
+        other_budget.amount += amount
+        return f"Transferred {amount} from {self.category} to {other_budget.category}"
+
+    def get_balance(self):
+        return self.amount
+
+Example usage
+food = Budget("Food", 40000)
 print(food.deposit(300))
-print(food.transfer(30000))
-#print(food)
+print(food.transfer_to(Budget("Entertainment", 0), 30000))
+print(food.get_balance())
+               
 
 
 
